@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main_page.css') }}">
+</head>
+<body>
+    <p>Hello! Type in your task below: <br></p>
+    <form method="post" action=''>
+        <label for="task_name">Task: </label>
+        <input type="text" id="username" name="task">>
+    </form>
+    <p>Your task is: {{task}}</p>
+</body>
+</html>
+
+
+
