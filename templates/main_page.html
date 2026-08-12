@@ -5,15 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Main Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main_page.css') }}">
+    <script src="../static/main_pg_script.js"></script>
+    <link rel="stylesheet" href="../static/main_page.css">
 </head>
 <body>
     <p>Hello! Type in your task below: <br></p>
     <form method="post" action=''>
         <label for="task_name">Task: </label>
-        <input type="text" id="username" name="task">>
+        <input type="text" id="task_name" name="task">
+        
     </form>
-    <p>Your task is: {{task}}</p>
+    <div class="actions">
+        <br>    
+        <button onclick="">Delete Task</button>
+        <button>Finish Task</button>
+    </div>
+    <p>Your task is: <br><br>{{ task | nl2br }}</p>
 </body>
 </html>
 
