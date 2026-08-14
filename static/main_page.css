@@ -1,5 +1,8 @@
-
-
-p {
+.tasks {
     color: blue;
+}
+
+.task_management {
+    display: flex; /*makes everything side by side*/
+    gap: 12px;
 }

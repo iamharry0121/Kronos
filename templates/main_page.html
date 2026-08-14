@@ -5,24 +5,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Main Page</title>
-    <script src="../static/main_pg_script.js"></script>
+    <script src="../static/scripts.js"></script>
     <link rel="stylesheet" href="../static/main_page.css">
 </head>
 <body>
     <p>Hello! Type in your task below: <br></p>
-    <form method="post" action=''>
-        <label for="task_name">Task: </label>
-        <input type="text" id="task_name" name="task">
-        
-    </form>
-    <div class="actions">
+    <div class="tasks">
         <br>    
-        <button onclick="">Delete Task</button>
-        <button>Finish Task</button>
+        <form method="POST">
+            {{form.hidden_tag()}}
+
+            <div>
+                {{form.task.label}}
+                {{form.task()}}
+            </div>
+            <div>
+                <br>
+                {{form.submit()}}
+            </div>
+        </form>
     </div>
-    <p>Your task is: <br><br>{{ task | nl2br }}</p>
+    <div>
+        <p>Tasks Inputed:<br></p>
+        {% for value in values%}
+        <p>{{loop.index}}.{{value}}<br></p>
+        {% endfor %} <!--ends the for loop, hence 'endfor'-->
+
+    </div>
+    <!--
+    <button onclick="" id="delete_button">Delete Task</button>
+    <button onclick="" id="finish_button">Finish Task</button>
+    -->
+    
 </body>
 </html>
-
 
 
