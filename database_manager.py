@@ -29,5 +29,6 @@ def delete_task_by_id(task_id):
 def toggle_task(task_id):
     task = Task.query.get_or_404(task_id)
     task.completed = not task.completed
-    db
+    db.session.commit()
+    return task.completed
 

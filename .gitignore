@@ -1,5 +1,13 @@
-/__pycache__
-/.vscode
-/.venv
 requirements.txt
-/instance
+/instance/
+*.db
+*.sqlite3
+/__pycache__/
+*.pyc
+/.venv/
+/env/
+/venv/
+/.vscode/
+*.swp
+.DS_Store
+Thumbs.db

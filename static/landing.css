@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    background-color: #0b0b0b;
+    color: #f5f5f5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.landing {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 120px 24px;
+    text-align: center;
+}
+
+.landing h1 {
+    font-size: 2.5rem;
+    margin: 24px;
+    color: #d4af37;
+}
+
+.cta-buttom {
+    display: inline-black;
+    padding: 14px 32px;
+    background-color: #57a1a0;
+    color: #0b0b0b;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: opacity 0.15s ease;
+}
+
+.cta-buttom:hover {
+    opacity: 0.85;
+}
+
+.cta-buttom:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+}
