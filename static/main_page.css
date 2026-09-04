@@ -1,8 +1,16 @@
-.tasks {
-    color: blue;
+.task_management {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
 }
 
-.task_management {
-    display: flex; /*makes everything side by side*/
-    gap: 12px;
+.delete {
+    display: inline;
+    margin: 0;
+}
+
+.delete-btn {
+    cursor: pointer;
+    padding: 2px 8px;
 }

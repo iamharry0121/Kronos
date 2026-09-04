@@ -5,16 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Main Page</title>
-    <script src="../static/scripts.js"></script>
-    <link rel="stylesheet" href="../static/main_page.css">
+    <script src="{{ url_for('static', filename='scripts.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main_page.css')}}">
 </head>
 <body>
-    <p>Hello! Type in your task below: <br></p>
-    <div class="tasks">
-        <br>    
+    <div class="tasks">  
         <form method="POST">
             {{form.hidden_tag()}}
-
             <div>
                 {{form.task.label}}
                 {{form.task()}}
@@ -26,16 +23,19 @@
         </form>
     </div>
     <div>
-        <p>Tasks Inputed:<br></p>
-        {% for value in values%}
-        <p>{{loop.index}}.{{value}}<br></p>
+        <p>Tasks Inputted:<br></p>
+        {% for item in values%}
+            <div class="task_management">
+                <span class="task-text">{{loop.index}}. {{ item.task }}</span>
+                <form action="{{ url_for('delete_task', task_id=item.id)}}" method="POST">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+        {% else %}
+            <p>No tasks added yet.</p>
         {% endfor %} <!--ends the for loop, hence 'endfor'-->
 
     </div>
-    <!--
-    <button onclick="" id="delete_button">Delete Task</button>
-    <button onclick="" id="finish_button">Finish Task</button>
-    -->
     
 </body>
 </html>
