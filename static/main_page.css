@@ -6,6 +6,25 @@ body {
     padding: 40px 24px;
 }
 
+.top-bar {
+    max-width: 480px;
+    margin: 0 auto 24px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #cfcfcf;
+}
+
+.logout-link {
+    color: #888;
+    text-decoration: none;
+}
+
+.logout-link:hover {
+    color: #c3c2c2;
+}
+
 .add-task {
     max-width: 480px;
     margin: 0 auto 40px auto

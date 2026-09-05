@@ -10,6 +10,11 @@
 </head>
 <body>
 
+    <div class="top-bar">
+        <span>{{ current_user.email }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-link">Log out</a>
+    </div>
+
     <div class="add-task">
         <form method="POST">
             {{ form.hidden_tag() }}
