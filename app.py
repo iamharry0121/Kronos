@@ -68,7 +68,7 @@ def login():
     if form.validate_on_submit():
         user = db_mgr.get_user_by_email(form.email.data)
 
-        if user is None or not user.checkpassword(form.password.data):
+        if user is None or not user.check_password(form.password.data):
             flash('Incorrect email or password')
             return redirect(url_for('login'))
 
@@ -84,6 +84,7 @@ def logout():
     return redirect(url_for('landing_page'))
 
 @app.route('/home', methods=['GET', 'POST'])
+@login_required
 def main_page():
     form = EnterTask()
     if form.validate_on_submit():
@@ -94,11 +95,13 @@ def main_page():
     return render_template('main_page.html', form=form, values=tasks)
 
 @app.route('/toggle/<int:task_id>', methods=['POST'])
+@login_required
 def toggle_task(task_id):
     is_completed = db_mgr.toggle_task(task_id, current_user.id)
     return jsonify({'success':True, 'completed':is_completed})
 
 @app.route('/delete/<int:task_id>', methods=['POST'])
+@login_required
 def delete_task(task_id):
     db_mgr.delete_task_by_id(task_id, current_user.id)
     return jsonify({'success':True})
