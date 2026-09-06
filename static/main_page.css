@@ -73,3 +73,10 @@ body {
     text-decoration: line-through;
     color: #888
 }
+
+.due-date {
+    font-size: 0.8rem;
+    color: #57a1a0;
+    margin-left: auto;
+    white-space: nowrap;
+}

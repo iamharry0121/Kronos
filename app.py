@@ -1,11 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, flash
 from flask_wtf import FlaskForm, CSRFProtect
-from wtforms import SubmitField, StringField , PasswordField
+from wtforms import SubmitField, StringField, PasswordField, DateTimeLocalField, SelectField
 from wtforms.validators import DataRequired, Email
 from flask_login import (
     LoginManager, login_user, logout_user, login_required, current_user
 )
+from dotenv import load_dotenv
 import database_manager as db_mgr
+from reminder_scheduler import start_scheduler
+
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'testingtesting6767'
@@ -23,7 +28,26 @@ def load_user(user_id):
     return db_mgr.get_user_by_id(user_id)
 
 class EnterTask(FlaskForm):
-    task = StringField('Task', [DataRequired()])
+    task = StringField('Task', validators=[DataRequired()])
+    # DateTimeLocalField renders as the browser's built-in date+time picker.
+    due_date = DateTimeLocalField(
+        'Due', format='%Y-%m-%dT%H:%M', validators=[DataRequired()]
+    )
+    # SelectField renders as a dropdown. Each tuple is (stored_value, label
+    # shown to the user). it store minutes since that's what the scheduler
+    # math needs, but coerce=int makes sure it comes back as a number, not
+    # a string, when the form is submitted
+    remind_minutes_before = SelectField(
+        'Remind me',
+        choices=[
+            (15, '15 minutes before'),
+            (60, '1 hour before'),
+            (1440, '1 day before'),
+            (10080, '1 week before'),
+        ],
+        coerce=int,
+        validators=[DataRequired()]
+    )
     submit = SubmitField('Submit')
 
 class SignupForm(FlaskForm):
@@ -88,7 +112,12 @@ def logout():
 def main_page():
     form = EnterTask()
     if form.validate_on_submit():
-        db_mgr.add_task(form.task.data, current_user.id)
+        db_mgr.add_task(
+            form.task.data,
+            form.due_date.data,
+            form.remind_minutes_before.data,
+            current_user.id
+        )
         return redirect(url_for('main_page'))
 
     tasks = db_mgr.get_all_tasks(current_user.id)
@@ -107,4 +136,7 @@ def delete_task(task_id):
     return jsonify({'success':True})
 
 if __name__ == '__main__':
+    # only start the background reminder-checking job when actually
+    # running the app (not e.g. when a test file imports app.py)
+    start_scheduler(app)
     app.run(debug=True)

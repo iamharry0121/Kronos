@@ -24,6 +24,19 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed = db.Column(db.Boolean, default=False)
 
+    # the date and time this task is due. Required (nullable=False) since
+    # every task needs one for the reminder-email feature to work.
+    due_date = db.Column(db.DateTime, nullable=False)
+
+    # tracks whether we've already sent the reminder email for this task,
+    # so the scheduler (added later) doesn't email the user twice.
+    reminder_sent = db.Column(db.Boolean, default=False)
+
+    # how many minutes before due_date the reminder email should go out.
+    # Stored as minutes so the scheduler math is just simple subtraction:
+    # remind_at = due_date - timedelta(minutes=remind_minutes_before)
+    remind_minutes_before = db.Column(db.Integer, nullable=False, default=60)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 def init_db(app):
@@ -47,13 +60,35 @@ def create_user(email, plain_txt_pwd):
 #end of user related helpers
 
 #task related helpers
-def add_task(task_text, user_id):
-    new_task = Task(task=task_text, user_id=user_id)
+def add_task(task_text, due_date, remind_minutes_before, user_id):
+    new_task = Task(
+        task=task_text,
+        due_date=due_date,
+        remind_minutes_before=remind_minutes_before,
+        user_id=user_id
+    )
     db.session.add(new_task)
     db.session.commit()
 
 def get_all_tasks(user_id):
-    return Task.query.filter_by(user_id=user_id).all()
+    # Ordering by due_date means the soonest-due task always shows first.
+    return Task.query.filter_by(user_id=user_id).order_by(Task.due_date.asc()).all()
+
+def get_tasks_needing_reminders(now):
+    from datetime import timedelta
+    candidates = Task.query.filter_by(reminder_sent=False, completed=False).all()
+    due_for_reminder = []
+    for task in candidates:
+        remind_at = task.due_date - timedelta(minutes=task.remind_minutes_before)
+        if remind_at <= now:
+            due_for_reminder.append(task)
+    return due_for_reminder
+
+def mark_reminder_sent(task_id):
+    task = Task.query.get(task_id)
+    if task:
+        task.reminder_sent = True
+        db.session.commit()
 
 def delete_task_by_id(task_id, user_id):
     task = Task.query.filter_by(id=task_id, user_id=user_id).first_or_404()
@@ -66,4 +101,3 @@ def toggle_task(task_id, user_id):
     db.session.commit()
     return task.completed
 #end of task related helpers
-
